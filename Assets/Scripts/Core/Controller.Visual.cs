@@ -3,7 +3,7 @@ using UnityEngine;
 
 public partial class Controller : MonoBehaviour
 {
-    public bool UseAnimations { get; set; }
+    public bool UseAnimations { get; set; } = false;
     protected partial class Data
     {
         public SpriteRenderer sr;
@@ -11,7 +11,11 @@ public partial class Controller : MonoBehaviour
     }
     private void StartVisual()
     {
-
+        if (UseAnimations && data.animator == null)
+        {
+            ShowMissingComponentError("Animator");
+            
+        }
     }
 
     private void GetVisualComponents()
@@ -22,12 +26,10 @@ public partial class Controller : MonoBehaviour
 
     public void setAnimation(String animationName)
     {
-        if (data.animator == null)
-        {
-            ShowMissingComponentWarning("Animator");
-            return;
+        if (data.animator){
+            data.animator.Play(animationName);
         }
-        data.animator.Play(animationName);
+   
     }
 
     public void SetColor(Color color)
@@ -38,7 +40,7 @@ public partial class Controller : MonoBehaviour
         }
         else
         {
-            ShowMissingComponentWarning("SpriteRenderer");
+            ShowMissingComponentError("SpriteRenderer");
 
         }
     }

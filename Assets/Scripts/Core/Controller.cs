@@ -9,7 +9,7 @@ using UnityEngine;
 public partial class Controller : MonoBehaviour
 {
     protected partial class Data{}
-    protected Data data = new Data();
+    protected Data data;
 
     protected virtual void Start()
     {
@@ -22,18 +22,20 @@ public partial class Controller : MonoBehaviour
     }
     protected void Awake()
     {
+        data = new Data();
         GetComponents();
     }
 
     protected virtual void GetComponents()
     {
+
         GetPhysicsComponents();
         GetVisualComponents();
     }
 
-    void ShowMissingComponentWarning(string componentName)
+    void ShowMissingComponentError(string componentName)
     {
-        Debug.LogWarning($"{gameObject.name} is missing a {componentName} component.");
+        Debug.LogError($"{gameObject.name} is missing a {componentName} component.");
     }
     
 

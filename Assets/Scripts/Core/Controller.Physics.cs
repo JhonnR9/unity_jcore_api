@@ -20,7 +20,7 @@ public partial class Controller : MonoBehaviour
         public Rigidbody2D rb;
         public Vector2 InputDirection = Vector2.zero;
         public Vector2 MoveVelocity = Vector2.zero;
-        public Rigidbody2D.SlideMovement SlideMovement = new Rigidbody2D.SlideMovement();
+        public Rigidbody2D.SlideMovement SlideMovement;
         public Rigidbody2D.SlideResults SlideResults;
     }
 
@@ -28,10 +28,11 @@ public partial class Controller : MonoBehaviour
     {
         if (data.rb == null)
         {
-            ShowMissingComponentWarning("Rigidbody2D");
+            ShowMissingComponentError("Rigidbody2D");
             return;
         }
 
+        data.SlideMovement = new Rigidbody2D.SlideMovement();
         data.rb.bodyType = RigidbodyType2D.Kinematic;
         data.rb.gravityScale = 0;
 
@@ -44,6 +45,7 @@ public partial class Controller : MonoBehaviour
     void GetPhysicsComponents()
     {
         data.rb = GetComponent<Rigidbody2D>();
+        
     }
 
     void UpdateMovement()
@@ -86,15 +88,11 @@ public partial class Controller : MonoBehaviour
 
     }
 
-    public void AddInputVector(Vector2 newInput)
+    public void AddMoveInputVector(Vector2 newInput)
     {
         if (data.rb)
         {
             data.InputDirection = newInput.sqrMagnitude > 0.01f ? newInput.normalized : Vector2.zero;
-        }
-        else
-        {
-            Debug.LogWarning($"{gameObject.name}: This class does not have a Rigidbody and cannot move with input.");
         }
     }
 

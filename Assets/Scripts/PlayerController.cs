@@ -1,6 +1,6 @@
 using UnityEngine;
 
-class PlayerTest : Controller{
+class PlayerController : Controller{
 
     protected override void Start()
     {
@@ -11,6 +11,6 @@ class PlayerTest : Controller{
     }
     void Update()
     {
-        AddInputVector(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
+        AddMoveInputVector(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
     }
 }
