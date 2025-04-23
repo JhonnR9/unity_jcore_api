@@ -1,6 +1,7 @@
 
 //Controller.Physics.cs
 
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -19,6 +20,8 @@ public partial class Controller : MonoBehaviour
         public Rigidbody2D rb;
         public Vector2 InputDirection = Vector2.zero;
         public Vector2 MoveVelocity = Vector2.zero;
+        public Rigidbody2D.SlideMovement SlideMovement = new Rigidbody2D.SlideMovement();
+        public Rigidbody2D.SlideResults SlideResults;
     }
 
     private void StartPhysics()
@@ -30,6 +33,13 @@ public partial class Controller : MonoBehaviour
         }
 
         data.rb.bodyType = RigidbodyType2D.Kinematic;
+        data.rb.gravityScale = 0;
+
+        data.SlideMovement.gravity = Vector2.zero;
+        data.SlideMovement.surfaceAnchor = Vector2.zero;
+        data.SlideMovement.useSimulationMove = true;
+        data.SlideMovement.surfaceUp=Vector2.zero;
+
     }
     void GetPhysicsComponents()
     {
@@ -66,7 +76,13 @@ public partial class Controller : MonoBehaviour
 
     private void ApplyMovement()
     {
-        data.rb.MovePosition(data.rb.position + data.MoveVelocity * Time.fixedDeltaTime);
+        data.SlideResults = data.rb.Slide(data.MoveVelocity, Time.fixedDeltaTime, data.SlideMovement);
+
+        if (data.SlideResults.slideHit)
+        {
+            data.SlideMovement.surfaceAnchor = data.SlideResults.surfaceHit.normal * 0.1f;
+
+        }
 
     }
 

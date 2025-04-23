@@ -11,9 +11,7 @@ public partial class Controller : MonoBehaviour
     }
     private void StartVisual()
     {
-        if (data.animator == null){
-            ShowMissingComponentWarning("Animator");
-        }
+
     }
 
     private void GetVisualComponents()
@@ -22,7 +20,13 @@ public partial class Controller : MonoBehaviour
         data.animator = GetComponent<Animator>();
     }
 
-    public void setAnimation(String animationName){
+    public void setAnimation(String animationName)
+    {
+        if (data.animator == null)
+        {
+            ShowMissingComponentWarning("Animator");
+            return;
+        }
         data.animator.Play(animationName);
     }
 

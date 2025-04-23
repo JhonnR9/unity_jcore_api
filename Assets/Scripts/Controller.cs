@@ -8,7 +8,6 @@ using UnityEngine;
 /// </summary>
 public partial class Controller : MonoBehaviour
 {
- 
     protected partial class Data{}
     protected Data data = new Data();
 
@@ -36,5 +35,7 @@ public partial class Controller : MonoBehaviour
     {
         Debug.LogWarning($"{gameObject.name} is missing a {componentName} component.");
     }
+    
 
 }
+
