@@ -12,8 +12,7 @@ public partial class Controller : MonoBehaviour
 {
     protected partial class Data
     {
-        public HeapQueue<Command> commands { get; set; }
-        public Coroutine commandRoutine;
+        public StateMachine stateMachine;
     }
     protected Data data;
 
@@ -24,59 +23,28 @@ public partial class Controller : MonoBehaviour
             StartPhysics();
         }
         StartVisual();
-        data.commands = new HeapQueue<Command>();
+        data.stateMachine = new StateMachine(this);
     }
 
 
 
-    public void ScheduleCommand(Command command)
+    public StateMachine GetCommandDispatcher()
     {
-        //Print($"Agendando comando: {command.GetType().Name}, Prioridade: {command.Priority}");
-        data.commands.Push(command);
-
-        if (data.commandRoutine == null)
-        {
-            data.commandRoutine = StartCoroutine(ProcessCommands());
-        }
+        return data.stateMachine;
     }
-
 
     public void Print(String message)
     {
         Debug.Log(message);
     }
 
-    IEnumerator ProcessCommands()
-    {
-        const float maxMillisecondsPerFrame = 5f;
-
-        while (!data.commands.IsEmpty)
-        {
-            float startTime = Time.realtimeSinceStartup * 1000f;
-
-            while (!data.commands.IsEmpty)
-            {
-                data.commands.First.Execute();
-                data.commands.Pop();
-
-                float elapsed = (Time.realtimeSinceStartup * 1000f) - startTime;
-
-                if (elapsed >= maxMillisecondsPerFrame)
-                    break;
-            }
-
-            yield return null;
-        }
-
-        data.commandRoutine = null;
-    }
-
-    protected virtual void Update(){}
+    protected virtual void Update() { }
     protected void Awake()
     {
         data = new Data();
         GetComponents();
     }
+
 
     protected virtual void GetComponents()
     {
