@@ -1,7 +1,7 @@
 
 //Controller.Physics.cs
 
-using Unity.VisualScripting;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 /// <summary>
@@ -67,6 +67,7 @@ public partial class Controller : MonoBehaviour
 
         data.MoveVelocity = movement;
     }
+
     virtual protected void FixedUpdate()
     {
         if (data.rb)
@@ -85,6 +86,10 @@ public partial class Controller : MonoBehaviour
             data.SlideMovement.surfaceAnchor = data.SlideResults.surfaceHit.normal * 0.1f;
 
         }
+
+        // Sync with model
+        data.model.position = data.rb.position;
+        data.model.velocity = data.rb.linearVelocity;
 
     }
 

@@ -1,21 +1,47 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+
 public class StateMachine : ICommandScheduler
 {
+    private readonly Dictionary<string, IState> states = new();
+    private IState currentState;
+
     private HeapQueue<Command> commands { get; set; }
     private Coroutine commandRoutine;
     private readonly Controller controller;
 
     public StateMachine(Controller controller)
     {
-        commands = new HeapQueue<Command>();
         this.controller = controller;
+        commands = new HeapQueue<Command>();
+    }
+
+    public void AddState(string key, IState state)
+    {
+        if (!states.ContainsKey(key))
+        {
+            states.Add(key, state);
+        }
+    }
+
+    public void ChangeState(string key)
+    {
+        if (states.TryGetValue(key, out var newState))
+        {
+            currentState?.OnExit();
+            currentState = newState;
+            currentState?.OnEnter(this, controller.GetModel());
+        }
+        else
+        {
+            Debug.LogWarning($"State '{key}' not found.");
+        }
     }
 
     public void ScheduleCommand(Command command)
     {
-        //Print($"Agendando comando: {command.GetType().Name}, Prioridade: {command.Priority}");
         commands.Push(command);
 
         if (commandRoutine == null)
@@ -49,6 +75,10 @@ public class StateMachine : ICommandScheduler
         commandRoutine = null;
     }
 
+    public void UpdateMachine(){
+        currentState?.OnProcess();
+    }
+
     public T CreateCommand<T>(Func<T> commandFactory) where T : Command
     {
         if (commandFactory == null)
@@ -56,9 +86,9 @@ public class StateMachine : ICommandScheduler
             Debug.LogError($"{controller.name}: The factory function cannot be null.");
             return null;
         }
+        T commnadInstance = commandFactory();
+        commnadInstance.Controller = controller;
 
-        return commandFactory();
+        return commnadInstance;
     }
-    
-
 }

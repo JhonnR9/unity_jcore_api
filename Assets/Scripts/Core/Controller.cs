@@ -13,6 +13,7 @@ public partial class Controller : MonoBehaviour
     protected partial class Data
     {
         public StateMachine stateMachine;
+        public Model model;
     }
     protected Data data;
 
@@ -27,8 +28,10 @@ public partial class Controller : MonoBehaviour
     }
 
 
-
-    public StateMachine GetCommandDispatcher()
+    public Model GetModel(){
+        return data.model;
+    }
+    public StateMachine GetStateMachine()
     {
         return data.stateMachine;
     }
@@ -38,11 +41,14 @@ public partial class Controller : MonoBehaviour
         Debug.Log(message);
     }
 
-    protected virtual void Update() { }
+    protected virtual void Update() { 
+        data.stateMachine.UpdateMachine();
+    }
     protected void Awake()
     {
         data = new Data();
         GetComponents();
+
     }
 
 

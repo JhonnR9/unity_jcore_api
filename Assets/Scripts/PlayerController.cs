@@ -11,6 +11,10 @@ class PlayerController : Controller
         base.Start();
         SetColor(Color.green);
         moveAction = InputSystem.actions.FindAction("Move");
+
+        GetStateMachine().AddState("move",new MoveState());
+        GetStateMachine().ChangeState("move");
+     
     }
 
     protected override void FixedUpdate()
@@ -30,7 +34,10 @@ class PlayerController : Controller
 
         if (moveDirection.x != InputCache.x || moveDirection.y != InputCache.y)
         {
-            GetCommandDispatcher().ScheduleCommand(new MoveCommand(this, moveDirection, 1));
+            //Command commnad = GetStateMachine().CreateCommand(() => new PrintCommand("test"));
+            //Command moveCommnad = GetStateMachine().CreateCommand(() => new MoveCommand(moveDirection));
+
+           // GetStateMachine().ScheduleCommand(commnad);
             //Debug.Log($"MoveCommand issued: {moveDirection}");
 
             InputCache = moveDirection;

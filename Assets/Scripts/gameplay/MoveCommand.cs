@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class MoveCommand : Command
 {
-    private Controller controller;
     private Vector2 direction;
-    
-    public MoveCommand(Controller controller, Vector2 direction , int priority=0){
-        this.controller = controller;
+
+    public MoveCommand(Vector2 direction, Controller controller = null, int priority = 0)
+    {
+        this.Controller = controller;
         this.Priority = priority;
         this.direction = direction;
     }
     public override void Execute()
     {
-        controller.AddMoveInputVector(direction);
+        Controller.AddMoveInputVector(direction);
     }
 }
